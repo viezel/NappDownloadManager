@@ -1,0 +1,17 @@
+#
+# this is your module manifest and used by Titanium
+# during compilation, packaging, distribution, etc.
+#
+version: 1.0.0
+apiversion: 2
+description: downloadmanager
+author: Mads Moller
+license: MIT
+copyright: Copyright (c) 2014 by Napp ApS
+
+# these should not be edited
+name: downloadmanager
+moduleid: dk.napp.downloadmanager
+guid: df317329-bceb-4caf-a059-74095ec13289
+platform: android
+minsdk: 3.2.0.GA
