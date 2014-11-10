@@ -74,6 +74,14 @@ All events send an object of the download information.  Example of event handler
 		priority: NappDownloadManager.DOWNLOAD_PRIORITY_NORMAL
 	});
 	
+> **Important**
+> 
+> The downloader starts immediately downloading the files, after you add them! Be sure to set any event listeners before adding your first file or it might not get called!
+
+
+
+	
+	
 ### stopDownloader
 
 	NappDownloadManager.stopDownloader();
