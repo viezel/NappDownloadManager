@@ -4,9 +4,12 @@
 
 **THIS IS WORK IN PROGRESS. HELP OUT IMPROVE IT**
 
+**The Mission: Create a common way for Ti apps to download multiple files in a background thread. The more work the module can do - the better. We do not want to spam the JS thread with too much info. e.g. if you use the event "progress" you keep spamming the JS thread - hence not really getting anything out of threading.**
+
+
 ## Description
 
-This is a download module for titanium that allows you to add urls and download the files in the background.
+This is a download module for Appcelerator Titanium that allows you to add urls and download the files in the background.
 
 ## Accessing the module
 
