@@ -13,19 +13,15 @@
 {
     long bytesForBPS;
     int trackBpsIterationCount;
-    int fireProgressEventCount;
     int TRACK_BPS_ON_ITERATION_NUMBER;
-    int FIRE_PROGRESS_EVENT_ON_ITERATION_NUMBER;
     NSDate* bpsTrackingStart;
+    NSDate* lastFiredProgressEvent;
     DownloadInformation* downloadInformation;
     NSURLConnection* urlConnection;
     NSThread* downloadThread;
-    //NSOutputStream* outputStream;
 }
 
-
 @end
-
 
 
 @implementation SingleDownload
@@ -37,9 +33,7 @@
         // Initialization code here.
         bytesForBPS = 0;
         trackBpsIterationCount = 0;
-        fireProgressEventCount = 0;
         TRACK_BPS_ON_ITERATION_NUMBER = 30;
-        FIRE_PROGRESS_EVENT_ON_ITERATION_NUMBER = 4;
     }
     
     return self;
@@ -51,6 +45,7 @@
     [self.permittedNetworks release];
     [self.delegate release];
     [bpsTrackingStart release];
+    [lastFiredProgressEvent release];
     [urlConnection release];
     [downloadInformation release];
     [downloadThread release];
@@ -72,6 +67,7 @@
     
     [self.downloadRequest setStatus:DownloadStatusInProgress];
     [downloadThread start];
+    lastFiredProgressEvent = [NSDate new];
 }
 
 
@@ -109,7 +105,7 @@
         BOOL result = [fileMan createFileAtPath:[self.downloadRequest filePath] contents:nil attributes:nil];
         if (result == YES)
         {
-            NSLog(@"File successfully created.");                        
+            TiLog(@"File successfully created.");
         }
         else
         {
@@ -148,11 +144,11 @@
         range = [range stringByAppendingString:@"-"];
         //NSString* range = [NSString stringWithFormat:@"bytes=%i-", [downloadRequest availableLength]];
         
-        NSLog(@"Setting Range Request %@", range);            
+        TiLog(@"Setting Range Request %@", range);
         [request setValue:range forHTTPHeaderField:@"Range"];
     }
     
-    NSLog(@"Download Thread sending request.");            
+    TiLog(@"Download Thread sending request.");
     urlConnection = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:YES];    
 }
 
@@ -197,12 +193,12 @@
         }
     }        
     
-    
-    // Fire progress event (every n iterations through loop)
-    fireProgressEventCount++;
-    if (fireProgressEventCount == FIRE_PROGRESS_EVENT_ON_ITERATION_NUMBER)
+
+    // Fire progress event (twice every second)
+    // We do this to limit the need of stressing the UI thread with too many calls
+    if(fabs([lastFiredProgressEvent timeIntervalSinceNow]) > 0.5f )
     {
-        fireProgressEventCount = 0;
+        lastFiredProgressEvent = [NSDate new];
         [self.delegate downloadProgress:downloadInformation];
     }
     
@@ -229,10 +225,13 @@
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection{
-    if ([self.downloadRequest availableLength] == [self.downloadRequest length]) {        
+    if ([self.downloadRequest availableLength] == [self.downloadRequest length]) {
+        // send an extra progress event to keep it at 100%
+        [self.delegate downloadProgress:downloadInformation];
+        
         [self.downloadRequest setStatus:DownloadStatusComplete];
         [self.delegate downloadCompleted:downloadInformation];
-        NSLog(@"Download finished loading %lu / %lu", (unsigned long)[self.downloadRequest availableLength], (unsigned long)[self.downloadRequest length]);
+        TiLog(@"Download finished loading %lu / %lu", (unsigned long)[self.downloadRequest availableLength], (unsigned long)[self.downloadRequest length]);
         CFRunLoopStop(CFRunLoopGetCurrent());
     }
     else 
@@ -254,7 +253,7 @@
 -(void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
 {
     bpsTrackingStart = [NSDate new];
-    NSLog(@"Download received response. Writing to %@", [self.downloadRequest filePath]);            
+    TiLog(@"Download received response. Writing to %@", [self.downloadRequest filePath]);
     NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse*)response;
     if ([httpResponse respondsToSelector:@selector(allHeaderFields)])
     {
@@ -262,7 +261,7 @@
         NSString *acceptRanges = [dictionary valueForKey:@"Accept-Ranges"];
         if (acceptRanges == nil || [acceptRanges  isEqual: @"none"])
         {
-            NSLog(@"Server doesn't allow accept ranges so download the whole file. %@", [self.downloadRequest filePath]);
+            TiLog(@"Server doesn't allow accept ranges so download the whole file. %@", [self.downloadRequest filePath]);
             [self.downloadRequest setAvailableLength:0];
             [downloadInformation setAvailableLength:0];
             
@@ -272,11 +271,11 @@
         }
         else
         {
-            NSLog(@"Server allows accept ranges so append to the file.");            
+            TiLog(@"Server allows accept ranges so append to the file.");
         }
         
         NSString *contentLength = [dictionary valueForKey:@"content-length"];        
-        NSLog(@"Content length %@", contentLength);            
+        TiLog(@"Content length %@", contentLength);
         
         if ([self.downloadRequest length] == 0)
         {
