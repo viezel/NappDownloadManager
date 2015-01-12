@@ -142,6 +142,21 @@ All events send an object of the download information.  Example of event handler
     NappDownloadManager.addDownload({name: 'name 4', url:URL4, filePath:file4.nativePath, priority: NappDownloadManager.DOWNLOAD_PRIORITY_LOW});
 
 
+## Changelog
+
+
+* v1.1.1 (iOS)
+  * Improvement. Better handling of Progress Event. Now it fires twice every second, instead of all the time. This limits the UI thread, if you update UI to show download progress.
+  
+
+* v1.1.0 (iOS)
+  * Added 64bit support
+  
+
+* v1.0.0
+  * init
+
+
 ## Author
 
 **Mads Møller**  
