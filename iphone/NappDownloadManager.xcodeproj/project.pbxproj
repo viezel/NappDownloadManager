@@ -82,6 +82,7 @@
 		B641654C1A11075900035AFA /* ProgressiveDownloaderStatus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ProgressiveDownloaderStatus.h; path = Classes/ProgressiveDownloaderStatus.h; sourceTree = "<group>"; };
 		B641654D1A11075900035AFA /* SingleDownload.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SingleDownload.h; path = Classes/SingleDownload.h; sourceTree = "<group>"; };
 		B641654E1A11075900035AFA /* SingleDownload.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SingleDownload.m; path = Classes/SingleDownload.m; sourceTree = "<group>"; };
+		B64946CA1A646DC1009F4074 /* NappDebug.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NappDebug.h; sourceTree = "<group>"; };
 		D2AAC07E0554694100DB518D /* libDkNappDownloadmanager.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libDkNappDownloadmanager.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -148,6 +149,7 @@
 				B641654C1A11075900035AFA /* ProgressiveDownloaderStatus.h */,
 				B641654D1A11075900035AFA /* SingleDownload.h */,
 				B641654E1A11075900035AFA /* SingleDownload.m */,
+				B64946CA1A646DC1009F4074 /* NappDebug.h */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
