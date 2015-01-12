@@ -26,7 +26,7 @@
     self = [super init];
     if (self) {
         // Initialization code here.
-        queue = dispatch_queue_create("com.kcwdev.completedqueue", 0);
+        queue = dispatch_queue_create("dk.napp.completedqueue", 0);
         downloadInformationsByUrl = [[NSMutableDictionary alloc] init];
         
         [self loadFromStorage];
@@ -112,7 +112,7 @@
 -(void)loadFromStorage
 {
     dispatch_async(queue, ^{        
-        NSLog(@"CompletedDownloadCatalog loadFromStorage");
+        TiLog(@"CompletedDownloadCatalog loadFromStorage");
         NSArray* paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, 
                                                              NSUserDomainMask, YES); 
         NSString* documentsDirectory = [paths objectAtIndex:0];

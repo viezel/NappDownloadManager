@@ -71,7 +71,7 @@
     self = [super init];
     
     if (self) {
-        NSLog(@"Initializing Downloader 2");
+        TiLog(@"Initializing Downloader 2");
         // Initialization code here.
         _identifier = 0;
         self.waitSecondsUponStart = 0.5f;
@@ -88,7 +88,6 @@
         self.PERSIST_ON_ITERATION_COUNT = 10;
         self.persistQueueIterationCount = 0;
         
-        NSLog(@"Calling startControllerThread");
         [self startControllerThread:0.5];
     }
     
@@ -97,7 +96,7 @@
 
 -(void)dealloc
 {
-    NSLog(@"Cleaning up downloader");
+    TiLog(@"Cleaning up downloader");
     [self stopControllerThread];
     [self.downloadQueue release];
     [self.downloadRequestUrlsThatMayProceed release];
@@ -184,7 +183,7 @@
     //    assert([request url] != nil && sizeof([request url]) > 0);
     //    assert([request fileName] != nil && sizeof([request fileName]) > 0);
     
-    NSLog(@"Adding download request for %@", request.url);
+    TiLog(@"Adding download request for %@", request.url);
     [[self downloadQueue] add:request defaultStorageLocation:self.defaultStorageLocation defaultPermittedNetworks:[self permittedNetworkTypes]];
 }
 
@@ -354,7 +353,7 @@
 
 -(void)startControllerThread:(double)waitSeconds
 {
-    NSLog(@"Starting download controller thread");
+    TiLog(@"Starting download controller thread");
     if (self.timeToStopControllerThread == YES)
     {
         self.timeToStopControllerThread = NO;
@@ -371,7 +370,7 @@
 
 -(void)controllerThread
 {
-    NSLog(@"Download controller thread started");
+    TiLog(@"Download controller thread started");
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     self.status = DownloaderStatusStarted;
     
@@ -420,7 +419,7 @@
 //            NSLog(@"[INFO] Download Request: %@", [request url]);
             if (request != nil && [self.downloadRequestUrlsThatMayProceed objectForKey:[request url]] == nil)
             {                
-                NSLog(@"Start Download: %@", [request url]);
+                TiLog(@"Start Download: %@", [request url]);
                 [[self downloadQueue] setRequest:[request url]
                                         toStatus:DownloadStatusInProgress];
                 NSNumber* permittedNetworks = [NSNumber numberWithInt:[request finalPermittedNetworkTypes]];
@@ -438,7 +437,7 @@
     }
     
     [pool release];
-    NSLog(@"Download controller thread exiting");
+    TiLog(@"Download controller thread exiting");
 }
 
 -(NetworkTypes)networkTypes

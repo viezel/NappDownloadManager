@@ -26,7 +26,7 @@
     self = [super init];
     if (self) {
         // Initialization code here.
-        queue = dispatch_queue_create("com.kcwdev.downloadqueue", 0);
+        queue = dispatch_queue_create("dk.napp.downloadqueue", 0);
         self.downloadRequests = [[NSMutableArray alloc] initWithCapacity:4];
         
         [self loadFromStorage];
@@ -211,8 +211,8 @@ toStatus:(DownloadStatus)status
 
 -(void)persistToStorage
 {  
-    dispatch_sync(queue, ^{        
-//        NSLog(@"Persisting queue to file");
+    dispatch_sync(queue, ^{
+        //TiLog(@"Persisting queue to file");
         NSArray* paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,
                                                              NSUserDomainMask, YES); 
         NSString* documentsDirectory = [paths objectAtIndex:0];
@@ -230,7 +230,7 @@ toStatus:(DownloadStatus)status
 
 -(void)loadFromStorage
 {
-//    NSLog(@"DownloadQueue loadFromStorage");
+    TiLog(@"DownloadQueue loadFromStorage");
     dispatch_sync(queue, ^{        
         NSArray* paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, 
                                                              NSUserDomainMask, YES); 

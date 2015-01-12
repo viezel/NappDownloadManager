@@ -12,6 +12,7 @@
 #import "TiHost.h"
 #import "TiUtils.h"
 
+
 @interface DkNappDownloadmanagerModule()
 {
     Downloader* downloader;
@@ -44,7 +45,7 @@
     
     downloader = [[Downloader alloc] init];
     [downloader setDelegate:self];
-    [downloader setMaximumSimultaneousDownloads:2];
+    [downloader setMaximumSimultaneousDownloads:4];
     
 	// this method is called when the module is first loaded
 	// you *must* call the superclass
@@ -114,7 +115,7 @@ MAKE_SYSTEM_PROP_DBL(DOWNLOAD_PRIORITY_HIGH, 0.3)
 
 -(void)setMaximumSimultaneousDownloads:(id)value
 {
-    NSLog(@"Set Maximum Simultaneous Downloads to %@", value);
+    TiLog(@"Set Maximum Simultaneous Downloads to %@", value);
     [self replaceValue:value forKey:@"maximumSimulataneousDownloads" notification:NO];
     [downloader setMaximumSimultaneousDownloads:[TiUtils intValue:value]];
 }
@@ -126,7 +127,7 @@ MAKE_SYSTEM_PROP_DBL(DOWNLOAD_PRIORITY_HIGH, 0.3)
 
 -(void)setPermittedNetworkTypes:(id)value
 {
-    NSLog(@"Set Permitted Network Types to %@", value);
+    TiLog(@"Set Permitted Network Types to %@", value);
     // NSInteger* number = NUMINT(value);
     
     [self replaceValue:value forKey:@"permittedNetworkTypes" notification:NO];
@@ -157,14 +158,7 @@ MAKE_SYSTEM_PROP_DBL(DOWNLOAD_PRIORITY_HIGH, 0.3)
     [request setName:[args objectForKey:@"name"]];
     [request setLocale:@"eng"];
     
-    // NSURL* fileurl = [NSURL fileURLWithPath:[args objectForKey:@"filePath"]];
-    // [[fileurl filePathURL]
-    
     NSURL* fileurl = [TiUtils toURL:[args objectForKey:@"filePath"] proxy:nil];
-    
-    //    NSURL* fileurl = [NSURL fileURLWithPath:[args objectForKey:@"filePath"]];
-    //    NSURL* tempurl = [TiUtils toURL:[fileurl absoluteString] proxy:self];
-    //    [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)
     [request setFilePath:[fileurl path]];
     
     [downloader downloadItem:request];
