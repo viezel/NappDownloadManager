@@ -25,12 +25,13 @@ NappDownloadManager.deleteItem(URL3);
 NappDownloadManager.deleteItem(URL4);
 
 var scrollView = Ti.UI.createScrollView({
+	top: "40dp",
 	scrollType : 'vertical',
 	layout : 'vertical',
 });
 
 var progressOptions = {
-	top : 0,
+	top : 20,
 	left : 10,
 	min : 0,
 	max : 100,
@@ -93,20 +94,20 @@ var startButton = Ti.UI.createButton({
 	title : 'Start Download',
 });
 startButton.addEventListener('click', function() {
-	var file1 = Ti.Filesystem.getFile(Ti.Filesystem.externalStorageDirectory, 'File1.bin');
-	if (file1.exists == false) {
+	var file1 = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'File1.bin');
+	if (file1.exists()) {
 		file1.deleteFile();
 	}
-	var file2 = Ti.Filesystem.getFile(Ti.Filesystem.externalStorageDirectory, 'File2.bin');
-	if (file2.exists) {
+	var file2 = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'File2.bin');
+	if (file2.exists()) {
 		file2.deleteFile();
 	}
-	var file3 = Ti.Filesystem.getFile(Ti.Filesystem.externalStorageDirectory, 'File3.bin');
-	if (file3.exists) {
+	var file3 = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'File3.bin');
+	if (file3.exists()) {
 		file3.deleteFile();
 	}
-	var file4 = Ti.Filesystem.getFile(Ti.Filesystem.externalStorageDirectory, 'File4.bin');
-	if (file4.exists) {
+	var file4 = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'File4.bin');
+	if (file4.exists()) {
 		file4.deleteFile();
 	}
 
