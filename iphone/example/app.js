@@ -157,5 +157,17 @@ NappDownloadManager.addEventListener('progress', function(e) {
 		label4.text = text;
 		progress4.value = progress;
 	}
-
 }); 
+
+
+// Events
+NappDownloadManager.addEventListener('paused', handleEvent);
+NappDownloadManager.addEventListener('failed', handleEvent);
+NappDownloadManager.addEventListener('completed', handleEvent);
+NappDownloadManager.addEventListener('cancelled', handleEvent); 
+NappDownloadManager.addEventListener('started', handleEvent);
+
+function handleEvent(e){
+	Ti.API.info("Event: " + e.type);
+	Ti.API.info( typeof e === 'object' ? JSON.stringify(e, null, '\t') : e);
+}

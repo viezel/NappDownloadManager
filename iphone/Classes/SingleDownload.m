@@ -225,6 +225,7 @@
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection{
+    
     if ([self.downloadRequest availableLength] == [self.downloadRequest length]) {
         // send an extra progress event to keep it at 100%
         [self.delegate downloadProgress:downloadInformation];
@@ -255,6 +256,20 @@
     bpsTrackingStart = [NSDate new];
     TiLog(@"Download received response. Writing to %@", [self.downloadRequest filePath]);
     NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse*)response;
+    NSInteger code = [httpResponse statusCode];
+    
+    // Error Check: We do not want to continue if response code is above 400 (error occured)
+    if(code >= 400){
+        //  Stop the download from proceeding
+        NSLog(@"Error: Download is invalid. Response code: %ld", (long)code);
+        [urlConnection cancel];
+        [self.downloadRequest setAvailableLength:0];
+        downloadInformation.message = @"Response error";
+        [self.delegate downloadFailed:downloadInformation];
+        CFRunLoopStop(CFRunLoopGetCurrent());
+        return;
+    }
+    
     if ([httpResponse respondsToSelector:@selector(allHeaderFields)])
     {
         NSDictionary *dictionary = [httpResponse allHeaderFields];
