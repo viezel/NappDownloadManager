@@ -137,6 +137,17 @@ startButton.addEventListener('click', function() {
 });
 scrollView.add(startButton);
 
+var printQueueButton = Ti.UI.createButton({
+	left : 10,
+	width : 280,
+	title : 'Log the queue',
+});
+printQueueButton.addEventListener('click', function() {
+	// print it to the log
+	handleEvent(NappDownloadManager.getAllDownloadInfo());
+});
+scrollView.add(printQueueButton);
+
 window.add(scrollView);
 
 NappDownloadManager.addEventListener('progress', function(e) {
@@ -158,3 +169,16 @@ NappDownloadManager.addEventListener('progress', function(e) {
 	}
 
 }); 
+
+
+// Events
+NappDownloadManager.addEventListener('paused', handleEvent);
+NappDownloadManager.addEventListener('failed', handleEvent);
+NappDownloadManager.addEventListener('completed', handleEvent);
+NappDownloadManager.addEventListener('cancelled', handleEvent); 
+NappDownloadManager.addEventListener('started', handleEvent);
+
+function handleEvent(e){
+	Ti.API.info("Event: " + e.type);
+	Ti.API.info( typeof e === 'object' ? JSON.stringify(e, null, '\t') : e);
+}

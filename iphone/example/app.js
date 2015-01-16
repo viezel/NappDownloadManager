@@ -138,6 +138,19 @@ startButton.addEventListener('click', function() {
 });
 scrollView.add(startButton);
 
+
+var printQueueButton = Ti.UI.createButton({
+	left : 10,
+	width : 280,
+	title : 'Log the queue',
+});
+printQueueButton.addEventListener('click', function() {
+	// print it to the log
+	handleEvent(NappDownloadManager.getAllDownloadInfo());
+});
+scrollView.add(printQueueButton);
+
+
 window.add(scrollView);
 
 NappDownloadManager.addEventListener('progress', function(e) {
