@@ -145,10 +145,10 @@ All events send an object of the download information.  Example of event handler
 ## Changelog
 
 
-* v1.1.2 (iOS)
+* v1.1.2 
   * Bugfix. Better handling of invalid for forbidden download links. 
 
-* v1.1.1 (iOS)
+* v1.1.1
   * Improvement. Better handling of Progress Event. Now it fires twice every second, instead of all the time. This limits the UI thread, if you update UI to show download progress.
   
 
