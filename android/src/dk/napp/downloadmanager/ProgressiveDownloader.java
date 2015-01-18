@@ -990,7 +990,6 @@ public class ProgressiveDownloader {
 					Thread.sleep(WAIT_MS_BETWEEN_QUEUED_REQUEST_CHECKS);
 				}			
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -1096,12 +1095,11 @@ public class ProgressiveDownloader {
 				Date bpsTrackingStart;
 				int trackBpsIterationCount;
 				int bytesForBps;
-				int fireProgressEventCount;
+				Date lastFiredProgressEvent;
 				boolean downloadBatchRequestIsComplete;
 
 				// Initialize
 				fileStream = null;
-				fireProgressEventCount = 0;
 				trackBpsIterationCount = 0;
 				bpsTrackingSpan = 0;
 				bytesForBps = 0;
@@ -1130,6 +1128,7 @@ public class ProgressiveDownloader {
 					downloadInformation.setMessage(message);
 					DownloadStarted.fireEvent(new DownloadEvent(this, downloadInformation, null));
 
+					
 					
 					Log.d(LCAT, "File length: " + file.length() + " available length: " + downloadRequest.getAvailableLength());	
 					if (file.length() != downloadRequest.getAvailableLength())
@@ -1188,12 +1187,12 @@ public class ProgressiveDownloader {
 						
 						//FileOutputStream outputStream = new FileOutputStream(file, true);
 						outputStream.flush();
-
-						// Receive and store bytes
 						
+						// Receive and store bytes
 						long loopCount = 0;
 						buffer = new byte[DOWNLOAD_BUFFER_SIZE];
 						bpsTrackingStart = new Date();
+						lastFiredProgressEvent = new Date();
 						while (_downloadRequestUrlsThatMayProceed.containsKey(downloadRequest.getUrl()) == true &&
 							(byteCount = responseStream.read(buffer, 0, DOWNLOAD_BUFFER_SIZE)) > 0)
 						{
@@ -1241,15 +1240,14 @@ public class ProgressiveDownloader {
 									downloadInformation.setLastDownloadBitsPerSecond(downloadRequest.getLastDownloadBitsPerSecond());
 								}
 							}
-
-							// Fire progress event (every n iterations through loop)
-							fireProgressEventCount++;
-							if (fireProgressEventCount == FIRE_PROGRESS_EVENT_ON_ITERATION_NUMBER)
-							{
-								fireProgressEventCount = 0;
+							
+							// Fire progress event (twice every second)
+							Date now = new Date();
+							if(now.getTime() - lastFiredProgressEvent.getTime() > 500){
+								lastFiredProgressEvent = now;
 								DownloadProgress.fireEvent(new DownloadEvent(this, downloadInformation, downloadBatchInformation));
 							}
-
+							
 							// Reset tracking of bits/second (every n iterations through loop)
 							if (trackBpsIterationCount == TRACK_BPS_ON_ITERATION_NUMBER)
 							{
@@ -1335,6 +1333,9 @@ public class ProgressiveDownloader {
 							{
 								_completedDownloadCatalog.addCompletedDownload(downloadInformation);
 							}
+							
+							// Fire an extra progress event to keep it at 100%
+							DownloadProgress.fireEvent(new DownloadEvent(this, downloadInformation, downloadBatchInformation));
 
 							// Fire downloadInformation completed event
 							DownloadCompleted.fireEvent(new DownloadEvent(this, downloadInformation, null));
@@ -1377,13 +1378,14 @@ public class ProgressiveDownloader {
 					}
 					catch (Exception e)
 					{
+						e.printStackTrace();
 						Log.d(LCAT, "Download thread exception " + e.toString());
 						// Cancel the entire batch?
 						if (downloadBatchRequest != null)
 						{
 							cancel(downloadBatchRequest.getDownloadBatchRequestId());
 						}
-
+						
 						// Fire download failed events
 						DownloadFailed.fireEvent(new DownloadEvent(this, downloadInformation, null));
 						if (downloadBatchRequest != null)
