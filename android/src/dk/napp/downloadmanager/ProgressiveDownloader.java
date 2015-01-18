@@ -1151,7 +1151,16 @@ public class ProgressiveDownloader {
 					HttpResponse response = webRequest1.execute(request);
 					responseStream = response.getEntity().getContent();
 					FileOutputStream outputStream;
-
+					
+					// Error Check: We do not want to continue if response code is above 400 (error occured)
+					int statusCode = response.getStatusLine().getStatusCode();
+					if(statusCode >= 400){
+						Log.e(LCAT, "Download is invalid. Response code: " + statusCode);
+						downloadInformation.setMessage("Response error");
+						throw new RuntimeException("Download is invalid.");
+					}
+					
+					
 						// Get response
 						if (response.containsHeader(HTTP_RESPONSE_HEADER_ACCEPT_RANGES) == true &&
 							response.getFirstHeader(HTTP_RESPONSE_HEADER_ACCEPT_RANGES).getValue() == HTTP_RESPONSE_HEADER_ACCEPT_RANGES_NONE)
