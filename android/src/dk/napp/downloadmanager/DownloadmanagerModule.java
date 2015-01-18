@@ -122,7 +122,6 @@ public class DownloadmanagerModule extends KrollModule
 			Log.d(LCAT, "Download Cancelled ");	
 			KrollDict dict = createDict(event.getDownloadInformation());
 			self.fireEvent(EVENT_CANCELLED, dict);
-			//TiMessenger.sendBlockingMainMessage(handler.obtainMessage(MSG_FIRE_CANCELLED, dict));
 		}
 	}
 
@@ -134,8 +133,7 @@ public class DownloadmanagerModule extends KrollModule
 			Log.d(LCAT, "Download Started ");	
 			KrollDict dict = createDict(event.getDownloadInformation());
 			dict.put("reason", event.getDownloadInformation().getMessage());
-			self.fireEvent(EVENT_CANCELLED, dict);
-			//TiMessenger.sendBlockingMainMessage(handler.obtainMessage(MSG_FIRE_CANCELLED, dict));
+			self.fireEvent(EVENT_STARTED, dict);
 		}
 	}
 	
