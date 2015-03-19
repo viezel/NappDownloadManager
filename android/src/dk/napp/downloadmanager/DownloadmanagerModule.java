@@ -272,6 +272,21 @@ public class DownloadmanagerModule extends KrollModule
 				
 		return list.toArray(array);
 	}
+	
+	@Kroll.method
+	public void deleteQueue() {
+		
+		// stop the downloader
+		downloader.stop();
+		
+		ArrayList<KrollDict> list = new ArrayList<KrollDict>();
+		for (DownloadInformation di : downloader.getDownloadInformation()) {
+			downloader.delete(di.getUrl());
+		}
+		
+		// restart it
+		downloader.start();
+	}
 
 	private KrollDict createDict(DownloadInformation di) {
 		KrollDict dict = new KrollDict();
