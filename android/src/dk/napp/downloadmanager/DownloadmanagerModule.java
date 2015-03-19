@@ -75,51 +75,38 @@ public class DownloadmanagerModule extends KrollModule
 	{
 		@Override
 		public void handleEvent(DownloadEvent event) {
-			// Log.d(LCAT, "Download Progress " + event.getDownloadInformation().getAvailableLength() + "/" + event.getDownloadInformation().getLength());
 			KrollDict dict = createDict(event.getDownloadInformation());
 			self.fireEvent(EVENT_PROGRESS, dict);
-			//TiMessenger.sendBlockingMainMessage(handler.obtainMessage(MSG_FIRE_PROGRESS, dict));
 		}
 	}
 	class PausedListener implements IListener<DownloadEvent>
 	{
 		@Override
 		public void handleEvent(DownloadEvent event) {
-			// TODO Auto-generated method stub
-			Log.d(LCAT, "Download Paused ");
 			KrollDict dict = createDict(event.getDownloadInformation());
 			self.fireEvent(EVENT_PAUSED, dict);
-			//TiMessenger.sendBlockingMainMessage(handler.obtainMessage(MSG_FIRE_PAUSED, dict));
 		}
 	}
 	class FailedListener implements IListener<DownloadEvent>
 	{
 		@Override
 		public void handleEvent(DownloadEvent event) {
-			// TODO Auto-generated method stub
-			Log.d(LCAT, "Download Failed ");
 			KrollDict dict = createDict(event.getDownloadInformation());
 			self.fireEvent(EVENT_FAILED, dict);
-			//TiMessenger.sendBlockingMainMessage(handler.obtainMessage(MSG_FIRE_FAILED, dict));
 		}
 	}
 	class CompletedListener implements IListener<DownloadEvent>
 	{
 		@Override
 		public void handleEvent(DownloadEvent event) {
-			// TODO Auto-generated method stub
-			Log.d(LCAT, "Download Completed ");
 			KrollDict dict = createDict(event.getDownloadInformation());			
 			self.fireEvent(EVENT_COMPLETED, dict);
-			//TiMessenger.sendBlockingMainMessage(handler.obtainMessage(MSG_FIRE_COMPLETED, dict));
 		}
 	}
 	class CancelledListener implements IListener<DownloadEvent>
 	{
 		@Override
 		public void handleEvent(DownloadEvent event) {
-			// TODO Auto-generated method stub
-			Log.d(LCAT, "Download Cancelled ");	
 			KrollDict dict = createDict(event.getDownloadInformation());
 			self.fireEvent(EVENT_CANCELLED, dict);
 		}
@@ -129,8 +116,6 @@ public class DownloadmanagerModule extends KrollModule
 	{
 		@Override
 		public void handleEvent(DownloadEvent event) {
-			// TODO Auto-generated method stub
-			Log.d(LCAT, "Download Started ");	
 			KrollDict dict = createDict(event.getDownloadInformation());
 			dict.put("reason", event.getDownloadInformation().getMessage());
 			self.fireEvent(EVENT_STARTED, dict);
@@ -141,7 +126,6 @@ public class DownloadmanagerModule extends KrollModule
 	{
 		@Override
 		public void handleEvent(DownloadEvent event) {
-			// TODO Auto-generated method stub
 			//Log.d(LCAT, "Download Batch Paused ");
 		}
 	}
@@ -149,7 +133,6 @@ public class DownloadmanagerModule extends KrollModule
 	{
 		@Override
 		public void handleEvent(DownloadEvent event) {
-			// TODO Auto-generated method stub
 			//Log.d(LCAT, "Download Batch Failed ");
 		}
 	}
@@ -157,7 +140,6 @@ public class DownloadmanagerModule extends KrollModule
 	{
 		@Override
 		public void handleEvent(DownloadEvent event) {
-			// TODO Auto-generated method stub
 			//Log.d(LCAT, "Download Batch Completed ");
 		}
 	}
@@ -165,7 +147,6 @@ public class DownloadmanagerModule extends KrollModule
 	{
 		@Override
 		public void handleEvent(DownloadEvent event) {
-			// TODO Auto-generated method stub
 			//Log.d(LCAT, "Download Batch Cancelled ");
 		}
 	}
@@ -205,6 +186,7 @@ public class DownloadmanagerModule extends KrollModule
 			downloader.setPermittedNetworkTypes(NetworkTypes.Mobile);
 		}
 	}
+	
 	// Methods
 	@Kroll.method
 	public void addDownload(KrollDict dict) {
