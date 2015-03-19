@@ -5,6 +5,14 @@
 		configuration in <iphone>, <android>, and <mobileweb> sections
 	-->
 	<iphone>
+		<plist>
+            <dict>
+            	<key>UIBackgroundModes</key>
+				<array>
+				    <string>fetch</string>
+				</array>
+            </dict>
+        </plist>
 	</iphone>
 	<android xmlns:android="http://schemas.android.com/apk/res/android">
 	</android>
