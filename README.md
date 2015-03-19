@@ -1,21 +1,28 @@
 # Napp Download Manager
 
-## Notice
-
-**THIS IS WORK IN PROGRESS. HELP OUT IMPROVE IT**
-
-**The Mission: Create a common way for Ti apps to download multiple files in a background thread. The more work the module can do - the better. We do not want to spam the JS thread with too much info. e.g. if you use the event "progress" you keep spamming the JS thread - hence not really getting anything out of threading.**
-
+[![gitTio](http://gitt.io/badge.png)](http://gitt.io/component/dk.napp.downloadmanager)
+[![License](http://img.shields.io/badge/license-MIT-orange.svg)](http://mit-license.org)
 
 ## Description
 
 This is a download module for Appcelerator Titanium that allows you to add urls and download the files in the background.
 
+![NappDownloadManager](https://raw.githubusercontent.com/viezel/NappDownloadManager/master/documentation/napp-download-manager.gif)
+
+## Quick Start 
+
+### Get it 
+Download the latest distribution ZIP-file and consult the [Titanium Documentation](http://docs.appcelerator.com/titanium/latest/#!/guide/Using_a_Module) on how install it, or simply use the [gitTio CLI](http://gitt.io/cli):
+
+`$ gittio install dk.napp.downloadmanager`
+
 ## Accessing the module
 
 To access this module from JavaScript, you would do the following:
 
+```javascript
 	var NappDownloadManager = require("dk.napp.downloadmanager");
+```
 
 The downloader variable is a reference to the Module object.	
 
@@ -36,6 +43,7 @@ The downloader variable is a reference to the Module object.
 ### Events
 
 	NappDownloadManager.addEventListener('progress', handleEvent);
+	NappDownloadManager.addEventListener('overallprogress', handleEvent);
 	NappDownloadManager.addEventListener('paused', handleEvent);
 	NappDownloadManager.addEventListener('failed', handleEvent);
 	NappDownloadManager.addEventListener('completed', handleEvent);
@@ -58,24 +66,29 @@ All events send an object of the download information.  Example of event handler
 
 ### maximumSimultaneousDownloads
 
+```javascript
 	NappDownloadManager.maximumSimultaneousDownloads = 4;
 	var maxDownloads = NappDownloadManager.getMaximumSimultaneousDownloads();
 	NappDownloadManager.setMaximumSimultaneousDownloads(4);
+```
 	
 ### permittedNetworkTypes
-
+```javascript
 	NappDownloadManager.permittedNetworkTypes = NappDownloadManager.NETWORK_TYPE_ANY;
 	var maxDownloads = NappDownloadManager.getPermittedNetworkTypes();
 	NappDownloadManager.setPermittedNetworkTypes(NappDownloadManager.NETWORK_TYPE_WIFI);
+```
 
 ### addDownload
 
-	NappDownloadManager.addDownload({
-		name:'Some name',
-		url:'http://host/file',
-		filePath: 'native file path',
-		priority: NappDownloadManager.DOWNLOAD_PRIORITY_NORMAL
-	});
+```javascript
+NappDownloadManager.addDownload({
+	name:'Some name',
+	url:'http://host/file',
+	filePath: 'native file path',
+	priority: NappDownloadManager.DOWNLOAD_PRIORITY_NORMAL
+});
+```
 	
 > **Important**
 > 
@@ -128,22 +141,25 @@ All events send an object of the download information.  Example of event handler
 
 ## Usage
 
-	var NappDownloadManager = require('dk.napp.downloadmanager');
-	NappDownloadManager.permittedNetworkTypes = NappDownloadManager.NETWORK_TYPE_ANY;
-	NappDownloadManager.maximumSimultaneousDownloads = 4;
-	NappDownloadManager.addEventListener('progress', function(e) {
-	    var progress = e.downloadedBytes * 100.0 / e.totalBytes;
-	    var text = e.downloadedBytes + '/' + e.totalBytes + ' ' + Math.round(progress)+ '% ' +  e.bps + ' bps';	
-	});
-
-	NappDownloadManager.addDownload({name: 'name 1', url:URL1, filePath:file1.nativePath, priority: NappDownloadManager.DOWNLOAD_PRIORITY_NORMAL});
-    NappDownloadManager.addDownload({name: 'name 2', url:URL2, filePath:file2.nativePath, priority: NappDownloadManager.DOWNLOAD_PRIORITY_LOW});
-    NappDownloadManager.addDownload({name: 'name 3', url:URL3, filePath:file3.nativePath, priority: NappDownloadManager.DOWNLOAD_PRIORITY_HIGH});
-    NappDownloadManager.addDownload({name: 'name 4', url:URL4, filePath:file4.nativePath, priority: NappDownloadManager.DOWNLOAD_PRIORITY_LOW});
-
+```javascript
+var NappDownloadManager = require('dk.napp.downloadmanager');
+NappDownloadManager.permittedNetworkTypes = NappDownloadManager.NETWORK_TYPE_ANY;
+NappDownloadManager.maximumSimultaneousDownloads = 4;
+NappDownloadManager.addEventListener('progress', function(e) {
+var progress = e.downloadedBytes * 100.0 / e.totalBytes;
+var text = e.downloadedBytes + '/' + e.totalBytes + ' ' + Math.round(progress)+ '% ' +  e.bps + ' bps';	
+});
+NappDownloadManager.addDownload({name: 'name 1', url:URL1, filePath:file1.nativePath, priority: NappDownloadManager.DOWNLOAD_PRIORITY_NORMAL});
+NappDownloadManager.addDownload({name: 'name 2', url:URL2, filePath:file2.nativePath, priority: NappDownloadManager.DOWNLOAD_PRIORITY_LOW});
+NappDownloadManager.addDownload({name: 'name 3', url:URL3, filePath:file3.nativePath, priority: NappDownloadManager.DOWNLOAD_PRIORITY_HIGH});
+NappDownloadManager.addDownload({name: 'name 4', url:URL4, filePath:file4.nativePath, priority: NappDownloadManager.DOWNLOAD_PRIORITY_LOW});
+```
 
 ## Changelog
 
+* v1.1.3 
+  * Added `overallprogress` event. 
+  * Added failed event on connection timeouts and error.
 
 * v1.1.2 
   * Bugfix. Better handling of invalid for forbidden download links. 
@@ -151,11 +167,9 @@ All events send an object of the download information.  Example of event handler
 * v1.1.1
   * Improvement. Better handling of Progress Event. Now it fires twice every second, instead of all the time. This limits the UI thread, if you update UI to show download progress.
   
-
 * v1.1.0 (iOS)
   * Added 64bit support
   
-
 * v1.0.0
   * init
 
@@ -173,7 +187,7 @@ Original work by Kevin Willford
 
     The MIT License (MIT)
     
-    Copyright (c) 2010-2014 Mads Møller
+    Copyright (c) 2010-2015 Mads Møller
 
     Permission is hereby granted, free of charge, to any person obtaining a copy
     of this software and associated documentation files (the "Software"), to deal
