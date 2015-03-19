@@ -1388,6 +1388,8 @@ public class ProgressiveDownloader {
 						
 						// Fire download failed events
 						DownloadFailed.fireEvent(new DownloadEvent(this, downloadInformation, null));
+						
+						// check for batch
 						if (downloadBatchRequest != null)
 						{
 							DownloadBatchFailed.fireEvent(new DownloadEvent(this, null, downloadBatchInformation));
