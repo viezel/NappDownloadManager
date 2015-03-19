@@ -32,6 +32,7 @@ public class DownloadmanagerModule extends KrollModule
 	private DownloadmanagerModule self;
 	
 	public static final String EVENT_PROGRESS = "progress";
+	public static final String EVENT_OVERALL_PROGRESS = "overallprogress";
 	public static final String EVENT_PAUSED = "paused";
 	public static final String EVENT_FAILED = "failed";
 	public static final String EVENT_COMPLETED = "completed";
@@ -75,40 +76,88 @@ public class DownloadmanagerModule extends KrollModule
 	{
 		@Override
 		public void handleEvent(DownloadEvent event) {
-			KrollDict dict = createDict(event.getDownloadInformation());
-			self.fireEvent(EVENT_PROGRESS, dict);
+			
+			if(self.hasListeners(EVENT_PROGRESS)) {
+				KrollDict dict = createDict(event.getDownloadInformation());
+				self.fireEvent(EVENT_PROGRESS, dict);
+			}
+			
+			// overall progress
+			if(self.hasListeners(EVENT_OVERALL_PROGRESS)) {
+				int downloadedBytes = 0;
+				int totalBytes = 0;
+				int totalBps = 0;
+				int count = 0;
+				int averageBps = 0;
+				int procentage = 0;
+				
+				// get all items from the queue
+				for (DownloadInformation di : downloader.getDownloadInformation()) {
+					downloadedBytes += (int) di.getAvailableLength();
+					totalBytes += (int) di.getLength();
+					totalBps += di.getLastDownloadBitsPerSecond();
+					count++;
+				}
+				
+				// calc average and progress procentage
+				if(count > 0){
+					averageBps = totalBps / count;
+				}
+				
+				if(totalBytes > 0 && downloadedBytes > 0){
+					procentage = downloadedBytes * 100 / totalBytes;
+				}
+				
+				KrollDict overallDict = new KrollDict();
+				overallDict.put("downloadedBytes", downloadedBytes);
+				overallDict.put("totalBytes", totalBytes);
+				overallDict.put("procentage", procentage);
+				overallDict.put("averageBps", averageBps);
+				overallDict.put("bps", totalBps);
+				
+				self.fireEvent(EVENT_OVERALL_PROGRESS, overallDict);
+			}
+			
 		}
 	}
 	class PausedListener implements IListener<DownloadEvent>
 	{
 		@Override
 		public void handleEvent(DownloadEvent event) {
-			KrollDict dict = createDict(event.getDownloadInformation());
-			self.fireEvent(EVENT_PAUSED, dict);
+			if(self.hasListeners(EVENT_PAUSED)) {
+				KrollDict dict = createDict(event.getDownloadInformation());
+				self.fireEvent(EVENT_PAUSED, dict);
+			}
 		}
 	}
 	class FailedListener implements IListener<DownloadEvent>
 	{
 		@Override
 		public void handleEvent(DownloadEvent event) {
-			KrollDict dict = createDict(event.getDownloadInformation());
-			self.fireEvent(EVENT_FAILED, dict);
+			if(self.hasListeners(EVENT_FAILED)) {
+				KrollDict dict = createDict(event.getDownloadInformation());
+				self.fireEvent(EVENT_FAILED, dict);
+			}
 		}
 	}
 	class CompletedListener implements IListener<DownloadEvent>
 	{
 		@Override
 		public void handleEvent(DownloadEvent event) {
-			KrollDict dict = createDict(event.getDownloadInformation());			
-			self.fireEvent(EVENT_COMPLETED, dict);
+			if(self.hasListeners(EVENT_COMPLETED)) {
+				KrollDict dict = createDict(event.getDownloadInformation());			
+				self.fireEvent(EVENT_COMPLETED, dict);
+			}
 		}
 	}
 	class CancelledListener implements IListener<DownloadEvent>
 	{
 		@Override
 		public void handleEvent(DownloadEvent event) {
-			KrollDict dict = createDict(event.getDownloadInformation());
-			self.fireEvent(EVENT_CANCELLED, dict);
+			if(self.hasListeners(EVENT_CANCELLED)) {
+				KrollDict dict = createDict(event.getDownloadInformation());
+				self.fireEvent(EVENT_CANCELLED, dict);
+			}
 		}
 	}
 
@@ -116,9 +165,11 @@ public class DownloadmanagerModule extends KrollModule
 	{
 		@Override
 		public void handleEvent(DownloadEvent event) {
-			KrollDict dict = createDict(event.getDownloadInformation());
-			dict.put("reason", event.getDownloadInformation().getMessage());
-			self.fireEvent(EVENT_STARTED, dict);
+			if(self.hasListeners(EVENT_STARTED)) {
+				KrollDict dict = createDict(event.getDownloadInformation());
+				dict.put("reason", event.getDownloadInformation().getMessage());
+				self.fireEvent(EVENT_STARTED, dict);
+			}
 		}
 	}
 	
@@ -279,7 +330,6 @@ public class DownloadmanagerModule extends KrollModule
 		// stop the downloader
 		downloader.stop();
 		
-		ArrayList<KrollDict> list = new ArrayList<KrollDict>();
 		for (DownloadInformation di : downloader.getDownloadInformation()) {
 			downloader.delete(di.getUrl());
 		}
