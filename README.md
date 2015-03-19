@@ -30,18 +30,23 @@ The downloader variable is a reference to the Module object.
 
 ### Network Types Constants
 
+```javascript
 	NappDownloadManager.NETWORK_TYPE_WIFI
 	NappDownloadManager.NETWORK_TYPE_MOBILE
 	NappDownloadManager.NETWORK_TYPE_ANY
+```
 
 ### Priority Constants
 
+```javascript
 	NappDownloadManager.DOWNLOAD_PRIORITY_LOW
 	NappDownloadManager.DOWNLOAD_PRIORITY_NORMAL
 	NappDownloadManager.DOWNLOAD_PRIORITY_HIGH
+```
 
 ### Events
 
+```javascript
 	NappDownloadManager.addEventListener('progress', handleEvent);
 	NappDownloadManager.addEventListener('overallprogress', handleEvent);
 	NappDownloadManager.addEventListener('paused', handleEvent);
@@ -50,10 +55,11 @@ The downloader variable is a reference to the Module object.
 	NappDownloadManager.addEventListener('cancelled', handleEvent);	
 	NappDownloadManager.addEventListener('started', handleEvent);
 
-	handleEvent for started will have a reason property with either 'start' or 'resume'
+```
 	
-All events send an object of the download information.  Example of event handler
-	
+All events send an object of the download information. Example of event handler
+
+```javascript	
 	function handleEvent(e) {
 		e.name;
 		e.url;
@@ -63,6 +69,7 @@ All events send an object of the download information.  Example of event handler
 		e.createdDate;
 		e.priority;
 	}
+```
 
 ### maximumSimultaneousDownloads
 
@@ -100,59 +107,103 @@ NappDownloadManager.addDownload({
 	
 ### stopDownloader
 
+```javascript
 	NappDownloadManager.stopDownloader();
+```
 
 ### restartDownloader
 
+```javascript
 	NappDownloadManager.restartDownloader();
+```
 	
 ### pauseAll
 
+```javascript
 	NappDownloadManager.pauseAll();
+```
 
 ### pauseItem
 
+```javascript
 	NappDownloadManager.pauseItem('http://host/file');
+```
 
 ### resumeAll
 
+```javascript
 	NappDownloadManager.resumeAll();
+```
 
 ### resumeItem
 
+```javascript
 	NappDownloadManager.resumeItem('http://host/file');
+```
 
 ### cancelItem
 
+```javascript
 	NappDownloadManager.cancelItem('http://host/file');
+```
 
 ### deleteItem
 
+```javascript
 	NappDownloadManager.deleteItem('http://host/file');
+```
 
 ### getDownloadInfo
 
+```javascript
 	NappDownloadManager.getDownloadInfo('http://host/file');
+```
 	
 ### getAllDownloadInfo
 
+```javascript
 	NappDownloadManager.getAllDownloadInfo();
+```
 
 
 ## Usage
 
+NappDownloadManager is a singleton - so only require it once globally. A good place to do so would be in alloy.js or app.js for vanilla Titanium projects. 
+
 ```javascript
+// if Alloy
+Alloy.Globals.NappDownloadManager = require('dk.napp.downloadmanager');
+...
+```
+
+```javascript
+// if vanilla Titanium
 var NappDownloadManager = require('dk.napp.downloadmanager');
+
 NappDownloadManager.permittedNetworkTypes = NappDownloadManager.NETWORK_TYPE_ANY;
 NappDownloadManager.maximumSimultaneousDownloads = 4;
+
+// add events before starting the downloads
 NappDownloadManager.addEventListener('progress', function(e) {
-var progress = e.downloadedBytes * 100.0 / e.totalBytes;
-var text = e.downloadedBytes + '/' + e.totalBytes + ' ' + Math.round(progress)+ '% ' +  e.bps + ' bps';	
+	// show it somewhere
+	var progress=e.downloadedBytes*100.0/e.totalBytes;
+	var text=e.downloadedBytes+'/'+e.totalBytes+' '+Math.round(progress)+'% '+e.bps+' bps';
 });
-NappDownloadManager.addDownload({name: 'name 1', url:URL1, filePath:file1.nativePath, priority: NappDownloadManager.DOWNLOAD_PRIORITY_NORMAL});
-NappDownloadManager.addDownload({name: 'name 2', url:URL2, filePath:file2.nativePath, priority: NappDownloadManager.DOWNLOAD_PRIORITY_LOW});
-NappDownloadManager.addDownload({name: 'name 3', url:URL3, filePath:file3.nativePath, priority: NappDownloadManager.DOWNLOAD_PRIORITY_HIGH});
-NappDownloadManager.addDownload({name: 'name 4', url:URL4, filePath:file4.nativePath, priority: NappDownloadManager.DOWNLOAD_PRIORITY_LOW});
+
+NappDownloadManager.addEventListener('completed', function(e) {
+	// do stuff
+});
+
+// define a path where the downloaded file should be stored once complete
+var file = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'myfile.ext');
+
+// add a download
+NappDownloadManager.addDownload({
+	name: 'myfile ..',
+	url: "https://example.com/myfile.ext",
+	filePath: file.nativePath,
+	priority: NappDownloadManager.DOWNLOAD_PRIORITY_NORMAL
+});
 ```
 
 ## Changelog
