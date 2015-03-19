@@ -306,6 +306,10 @@
 {    
     NSLog(@"Fetch failed: %@", [error localizedDescription]);
     CFRunLoopStop(CFRunLoopGetCurrent());
+    
+    // send failed event
+    downloadInformation.message = [error localizedDescription];
+    [self.delegate downloadFailed:downloadInformation];
 }
 
 @end
