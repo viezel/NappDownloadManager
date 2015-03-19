@@ -41,6 +41,8 @@
 -(void)cancelItem:(id)args;
 -(void)deleteItem:(id)args;
 
+-(void)deleteQueue:(id)args;
+
 -(id)getDownloadInfo:(id)args;
 -(id)getAllDownloadInfo:(id)args;
 

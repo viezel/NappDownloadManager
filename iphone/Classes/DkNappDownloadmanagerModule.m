@@ -227,6 +227,24 @@ MAKE_SYSTEM_PROP_DBL(DOWNLOAD_PRIORITY_HIGH, 0.3)
     return returnInfo;
 }
 
+-(void)deleteQueue:(id)args
+{
+    // stop the downloader
+    [downloader stop];
+    
+    // get all items from the queue
+    NSArray* items = [downloader downloadInformationAll];
+    for (DownloadInformation* item in items)
+    {
+        TiLog(@"Deleting from queue %@", [item url]);
+        // this will delete both incomplete and complete
+        [downloader deleteItem: [item url]];
+    }
+    
+    // restart it
+    [downloader start];
+}
+
 -(void)itemPaused:(DownloadInformation*)downloadInformation
 {
     if ([self _hasListeners:@"paused"])
