@@ -276,6 +276,36 @@ MAKE_SYSTEM_PROP_DBL(DOWNLOAD_PRIORITY_HIGH, 0.3)
         [self fireEvent:@"progress" withObject:[self createDict:downloadInformation]];
         [downloadInformation release];
     }
+    
+    // calc the overall progress
+    if ([self _hasListeners:@"overallprogress"])
+    {
+        int downloadedBytes = 0;
+        int totalBytes = 0;
+        int totalBps = 0;
+        
+        // get all items from the queue
+        NSArray* items = [downloader downloadInformationAll];
+        for (DownloadInformation* item in items)
+        {
+            downloadedBytes += [[NSNumber numberWithUnsignedInteger:[item availableLength]] intValue];
+            totalBytes += [[NSNumber numberWithUnsignedInteger:[item length]] intValue];
+            totalBps += [[NSNumber numberWithUnsignedInteger:[item lastDownloadBitsPerSecond]] intValue];
+        }
+        
+        // calc average and progress procentage
+        int averageBps = [[items valueForKeyPath:@"@avg.lastDownloadBitsPerSecond"] intValue];
+        int procentage = downloadedBytes * 100 / totalBytes;
+        
+        NSMutableDictionary* dict = [[[NSMutableDictionary alloc] init] autorelease];
+        [dict setValue:NUMINT(downloadedBytes)  forKey:@"downloadedBytes"];
+        [dict setValue:NUMINT(totalBytes)  forKey:@"totalBytes"];
+        [dict setValue:NUMINT(procentage)  forKey:@"procentage"];
+        [dict setValue:NUMINT(averageBps)  forKey:@"averageBps"];
+        [dict setValue:NUMINT(totalBps)  forKey:@"bps"];
+        
+        [self fireEvent:@"overallprogress" withObject:dict];
+    }
 }
 -(void)completed:(DownloadInformation*)downloadInformation
 {
