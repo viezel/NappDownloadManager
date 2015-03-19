@@ -56,7 +56,7 @@ public class DownloadmanagerModule extends KrollModule
 	public DownloadmanagerModule() {
 		super("Downloader");
 		downloader = new ProgressiveDownloader(TiApplication.getAppRootOrCurrentActivity());
-		downloader.setMaximumSimultaneousDownloads(2);
+		downloader.setMaximumSimultaneousDownloads(4);
 		downloader.DownloadProgress.addListener(new ProgressListener());
 		downloader.DownloadPaused.addListener(new PausedListener());
 		downloader.DownloadFailed.addListener(new FailedListener());
