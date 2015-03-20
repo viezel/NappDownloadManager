@@ -208,6 +208,9 @@ NappDownloadManager.addDownload({
 
 ## Changelog
 
+* v1.1.4
+  * Bugfix for invalid urls
+
 * v1.1.3 
   * Added `overallprogress` event. 
   * Added failed event on connection timeouts and error.

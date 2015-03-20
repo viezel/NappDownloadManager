@@ -500,6 +500,15 @@
     [self.delegate failed:information];
 }
 
+- (void)downloadInvalid:(DownloadInformation*) information
+{
+    TiLog(@"downloadInvalid");
+    // we always delete invalid downloads
+    [self deleteItem:information.url];
+    [self downloadFailed:information];
+}
+
+
 -(void) downloadRestart:(DownloadInformation *)information 
 {
     [[self downloadQueue] setRequest:information.url

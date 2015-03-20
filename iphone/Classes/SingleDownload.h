@@ -17,6 +17,7 @@
 - (void) downloadProgress: (DownloadInformation *) information;
 - (BOOL) canContinue: (DownloadInformation *) information;
 - (void) downloadFailed: (DownloadInformation *) information;
+- (void) downloadInvalid: (DownloadInformation *) information;
 - (void) downloadRestart: (DownloadInformation *) information;
 - (void) downloadStarted: (DownloadInformation *) information;
 @end

@@ -102,9 +102,9 @@ defaultPermittedNetworks:(NetworkTypes)permittedNetworks
     
     [downloadRequest retain];
     dispatch_sync(queue, ^{
-//        NSLog(@"Adding to request Queue: %@", [downloadRequest url]);
+        TiLog(@"Adding to request Queue: %@", [downloadRequest url]);
         [[self downloadRequests] addObject:downloadRequest];
-//        NSLog(@"downloadRequests count: %u", [[self downloadRequests] count]);
+        TiLog(@"downloadRequests count: %lu", (unsigned long)[[self downloadRequests] count]);
     });
     [self persistToStorage];
     [downloadRequest release];

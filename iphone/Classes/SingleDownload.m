@@ -239,15 +239,21 @@
     {
         [urlConnection cancel];
         NSLog(@"Download invalid %lu / %lu", (unsigned long)[self.downloadRequest availableLength], (unsigned long)[self.downloadRequest length]);
-        NSLog(@"Download invalid %@", [self.downloadRequest filePath]);
-        NSLog(@"Download invalid %@", [self.downloadRequest url]);
+        NSLog(@"Download invalid filePath %@", [self.downloadRequest filePath]);
+        NSLog(@"Download invalid url %@", [self.downloadRequest url]);
         [[NSFileManager defaultManager] removeItemAtPath:[self.downloadRequest filePath] error:nil];
-        [self.downloadRequest setAvailableLength:0];
-        [self startRequest];
-//        [delegate downloadProgress:downloadInformation];
-//        [delegate downloadRestart:downloadInformation];
-//        NSLog(@"Download finished loading not complete %i / %i", [downloadRequest availableLength], [downloadRequest length]);
-//        CFRunLoopStop(CFRunLoopGetCurrent());        
+        
+        // validate the url
+        if([self validateUrl:[self.downloadRequest url]]){
+            // try downloading again
+            [self.downloadRequest setAvailableLength:0];
+            [self startRequest];
+        } else {
+            downloadInformation.message = @"invalid download url";
+            [self.delegate downloadInvalid:downloadInformation];
+            
+            CFRunLoopStop(CFRunLoopGetCurrent());
+        }
     }
 }
 
@@ -310,6 +316,12 @@
     // send failed event
     downloadInformation.message = [error localizedDescription];
     [self.delegate downloadFailed:downloadInformation];
+}
+
+- (BOOL) validateUrl: (NSString *) candidate {
+    NSString *urlRegEx = @"(http|https)://((\\w)*|([0-9]*)|([-|_])*)+([\\.|/]((\\w)*|([0-9]*)|([-|_])*))+";
+    NSPredicate *urlTest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", urlRegEx];
+    return [urlTest evaluateWithObject:candidate];
 }
 
 @end
