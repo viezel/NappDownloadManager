@@ -208,6 +208,9 @@ NappDownloadManager.addDownload({
 
 ## Changelog
 
+* v1.1.5 (iOS only)  
+  * Making sure we dont violate the Apple rule: 2.23 - Apps must follow the iOS Data Storage Guidelines or they will be rejected. We set the `NSURLIsExcludedFromBackupKey` flag. 
+
 * v1.1.4
   * Bugfix for invalid urls
 

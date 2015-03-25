@@ -283,6 +283,8 @@ MAKE_SYSTEM_PROP_DBL(DOWNLOAD_PRIORITY_HIGH, 0.3)
         int downloadedBytes = 0;
         int totalBytes = 0;
         int totalBps = 0;
+        int averageBps = 0;
+        int procentage = 0;
         
         // get all items from the queue
         NSArray* items = [downloader downloadInformationAll];
@@ -293,18 +295,22 @@ MAKE_SYSTEM_PROP_DBL(DOWNLOAD_PRIORITY_HIGH, 0.3)
             totalBps += [[NSNumber numberWithUnsignedInteger:[item lastDownloadBitsPerSecond]] intValue];
         }
         
-        // calc average and progress procentage
-        int averageBps = [[items valueForKeyPath:@"@avg.lastDownloadBitsPerSecond"] intValue];
-        int procentage = downloadedBytes * 100 / totalBytes;
+        // we only want to send the event - if downloads are in progress
+        if([items count] > 0){
         
-        NSMutableDictionary* dict = [[[NSMutableDictionary alloc] init] autorelease];
-        [dict setValue:NUMINT(downloadedBytes)  forKey:@"downloadedBytes"];
-        [dict setValue:NUMINT(totalBytes)  forKey:@"totalBytes"];
-        [dict setValue:NUMINT(procentage)  forKey:@"procentage"];
-        [dict setValue:NUMINT(averageBps)  forKey:@"averageBps"];
-        [dict setValue:NUMINT(totalBps)  forKey:@"bps"];
+            // calc average and progress procentage
+            averageBps = [[items valueForKeyPath:@"@avg.lastDownloadBitsPerSecond"] intValue];
+            procentage = downloadedBytes * 100 / totalBytes;
         
-        [self fireEvent:@"overallprogress" withObject:dict];
+            NSMutableDictionary* dict = [[[NSMutableDictionary alloc] init] autorelease];
+            [dict setValue:NUMINT(downloadedBytes)  forKey:@"downloadedBytes"];
+            [dict setValue:NUMINT(totalBytes)  forKey:@"totalBytes"];
+            [dict setValue:NUMINT(procentage)  forKey:@"procentage"];
+            [dict setValue:NUMINT(averageBps)  forKey:@"averageBps"];
+            [dict setValue:NUMINT(totalBps)  forKey:@"bps"];
+        
+            [self fireEvent:@"overallprogress" withObject:dict];
+        }
     }
 }
 -(void)completed:(DownloadInformation*)downloadInformation

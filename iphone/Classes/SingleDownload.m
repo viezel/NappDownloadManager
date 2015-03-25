@@ -96,27 +96,29 @@
     downloadInformation.message = @"resume";
     NSFileManager* fileMan = [[[NSFileManager alloc] init] autorelease];    
     //NSLog(@"Checking if file exists. %@", [downloadRequest filePath]);            
-    if ([fileMan fileExistsAtPath:[self.downloadRequest filePath]] == false)
-    {
+    
+    // Checking if file exists
+    if ([fileMan fileExistsAtPath:[self.downloadRequest filePath]] == false) {
         downloadInformation.message = @"start";
         [fileMan createDirectoryAtPath:[[self.downloadRequest filePath] stringByDeletingLastPathComponent] withIntermediateDirectories:YES attributes:nil error:nil];        
-        // create new file                
+        
+        // create new file
         NSError* error;
         BOOL result = [fileMan createFileAtPath:[self.downloadRequest filePath] contents:nil attributes:nil];
-        if (result == YES)
-        {
+        if (result == YES) {
             TiLog(@"File successfully created.");
-        }
-        else
-        {
+            
+            // set no backup flag for iCloud
+            NSURL *downloadURL = [NSURL fileURLWithPath:[self.downloadRequest filePath]];
+            [downloadURL setResourceValue:[NSNumber numberWithBool:YES] forKey:NSURLIsExcludedFromBackupKey error:NULL];
+        } else {
             NSLog(@"Failed to create file. %@", [error debugDescription]);                                    
         }
     }
     
     UInt32 size = [[fileMan attributesOfItemAtPath:[self.downloadRequest filePath] error:nil] fileSize];
     NSLog(@"File Size %u of %lu", (unsigned int)size, (unsigned long)[self.downloadRequest length]);            
-    if (size != [self.downloadRequest availableLength])
-    {
+    if (size != [self.downloadRequest availableLength]) {
         [self.downloadRequest setAvailableLength:size];
     }
     
@@ -322,6 +324,20 @@
     NSString *urlRegEx = @"(http|https)://((\\w)*|([0-9]*)|([-|_])*)+([\\.|/]((\\w)*|([0-9]*)|([-|_])*))+";
     NSPredicate *urlTest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", urlRegEx];
     return [urlTest evaluateWithObject:candidate];
+}
+
+- (BOOL)addSkipBackupAttributeToItemAtPath:(NSString *) filePathString
+{
+    NSURL* URL= [NSURL fileURLWithPath: filePathString];
+    assert([[NSFileManager defaultManager] fileExistsAtPath: [URL path]]);
+    
+    NSError *error = nil;
+    BOOL success = [URL setResourceValue: [NSNumber numberWithBool: YES]
+                                  forKey: NSURLIsExcludedFromBackupKey error: &error];
+    if(!success){
+        NSLog(@"Error excluding %@ from backup %@", [URL lastPathComponent], error);
+    }
+    return success;
 }
 
 @end
