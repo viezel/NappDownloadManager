@@ -246,6 +246,7 @@ public class DownloadmanagerModule extends KrollModule
 		request.setName(TiConvert.toString(dict, "name"));
 		request.setLocale("eng");
 		request.setFileName(TiConvert.toString(dict, "filePath"));
+		request.setHeaders(dict.getKrollDict("headers"));
 		
 		int priority = 0;
 		if (dict.containsKey("priority")) {

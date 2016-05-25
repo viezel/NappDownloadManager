@@ -3,6 +3,7 @@ package dk.napp.downloadmanager;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.EnumSet;
+import java.util.Map;
 
 public class DownloadInformation implements Serializable {
 	/**
@@ -15,6 +16,7 @@ public class DownloadInformation implements Serializable {
 	private String locale;
 	private String filePath;
 	private String storageLocation;
+	private Map<String, Object> headers;
 	private EnumSet<NetworkTypes> permittedNetworkTypes;
 	private long length;
 	private int mediaBitsPerSecond;
@@ -166,5 +168,12 @@ public class DownloadInformation implements Serializable {
 	}
 	public void setMessage(String message) {
 		this.message = message;
+	}
+	
+	public Map<String, Object> getHeaders() {
+		return headers;
+	}
+	public void setHeaders(Map<String, Object> headers) {
+		this.headers = headers;
 	}
 }

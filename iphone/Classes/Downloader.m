@@ -228,6 +228,7 @@
             [di setIsReadyForPlayback:[request isReadyForPlayback]];
             [di setPermittedNetworkTypes:[request finalPermittedNetworkTypes]];
             [di setStorageLocation:[request finalStorageLocation]];
+            [di setHeaders:[request headers]];
         }
     }
         
@@ -296,6 +297,7 @@
         [request setOverrideStorageLocation:[di storageLocation]];
         [request setPriority:[di downloadPriority]];
         [request setOverridePermittedNetworkTypes:[di permittedNetworkTypes]];
+        [request setHeaders:[di headers]];
         
         if (byteOffset == 0)
         {
@@ -315,6 +317,7 @@
         [r setOverrideStorageLocation:[request overrideStorageLocation]];
         [r setPriority:[request priority]];
         [r setOverridePermittedNetworkTypes:[request overridePermittedNetworkTypes]];
+        [r setHeaders:[request headers]];
         request = r;
     }
     

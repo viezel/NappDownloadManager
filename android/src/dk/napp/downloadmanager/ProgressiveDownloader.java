@@ -3,13 +3,12 @@ package dk.napp.downloadmanager;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.io.RandomAccessFile;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.Hashtable;
-import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
 
@@ -22,7 +21,6 @@ import android.content.Context;
 import android.content.ContextWrapper;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.telephony.TelephonyManager;
 import android.util.Log;
 
 
@@ -629,6 +627,7 @@ public class ProgressiveDownloader {
 				downloadInformation.setIsReadyForPlayback(request.getIsReadyForPlayback());
 				downloadInformation.setPermittedNetworkTypes(request.getFinalPermittedNetworkTypes());
 				downloadInformation.setStorageLocation(request.getFinalStorageLocation());
+				downloadInformation.setHeaders(request.getHeaders());
 			}
 		}
 
@@ -764,6 +763,7 @@ public class ProgressiveDownloader {
 			downloadRequest.setOverrideStorageLocation(downloadInformation.getStorageLocation());
 			downloadRequest.setDownloadPriority(downloadInformation.getDownloadPriority());
 			downloadRequest.setOverridePermittedNetworkTypes(downloadInformation.getPermittedNetworkTypes());
+			downloadRequest.setHeaders(downloadInformation.getHeaders());
 
 			if (byteOffset == OFFSET_ZERO)
 			{
@@ -783,6 +783,7 @@ public class ProgressiveDownloader {
 			downloadRequest.setOverrideStorageLocation(downloadRequest.getOverrideStorageLocation());
 			downloadRequest.setDownloadPriority(downloadRequest.getDownloadPriority());
 			downloadRequest.setOverridePermittedNetworkTypes(downloadRequest.getOverridePermittedNetworkTypes());
+			downloadRequest.setHeaders(downloadRequest.getHeaders());
 		}
 
 		// Restart download information
@@ -1064,6 +1065,7 @@ public class ProgressiveDownloader {
 				downloadInformation.setIsReadyForPlayback(downloadRequest.getIsReadyForPlayback());
 				downloadInformation.setPermittedNetworkTypes(downloadRequest.getFinalPermittedNetworkTypes());
 				downloadInformation.setStorageLocation(downloadRequest.getFinalStorageLocation());
+				downloadInformation.setHeaders(downloadRequest.getHeaders());
 
 				if (downloadBatchRequest != null)
 				{
@@ -1140,6 +1142,13 @@ public class ProgressiveDownloader {
 					webRequest1 = new DefaultHttpClient();
 					HttpGet request = new HttpGet();
 					request.setURI(new URI(downloadRequest.getUrl()));
+					Map<String, Object> headers = downloadRequest.getHeaders();
+					if(headers != null && !headers.isEmpty()) {
+						for ( Entry<String, Object> entry : headers.entrySet()) {
+							request.setHeader(entry.getKey(), entry.getValue().toString());
+						}
+					}
+					
 					if (downloadRequest.getAvailableLength() > OFFSET_ZERO)
 					{
 						request.setHeader("Range", "bytes=" + downloadRequest.getAvailableLength() + '-' + downloadRequest.getLength());

@@ -22,8 +22,6 @@ import org.appcelerator.titanium.util.Log;
 
 import android.content.ContextWrapper;
 
-import sun.org.mozilla.javascript.internal.Context;
-
 public class DownloadQueue {
 	// Contstants
 	private static final String LCAT = "DownloadQueue";
