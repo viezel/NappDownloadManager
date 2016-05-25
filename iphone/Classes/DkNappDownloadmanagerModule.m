@@ -156,6 +156,7 @@ MAKE_SYSTEM_PROP_DBL(DOWNLOAD_PRIORITY_HIGH, 0.3)
     DownloadRequest* request = [[DownloadRequest alloc] init];
     [request setUrl:[args objectForKey:@"url"]];
     [request setName:[args objectForKey:@"name"]];
+    [request setHeaders:[args objectForKey:@"headers"]];
     [request setLocale:@"eng"];
     
     NSURL* fileurl = [TiUtils toURL:[args objectForKey:@"filePath"] proxy:nil];

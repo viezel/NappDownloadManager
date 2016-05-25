@@ -17,6 +17,7 @@
 @synthesize locale= _locale;
 @synthesize filePath = _filePath;
 @synthesize storageLocation = _storageLocation;
+@synthesize headers = _headers;
 @synthesize permittedNetworkTypes = _permittedNetworkTypes;
 @synthesize length = _length;
 @synthesize mediaBitsPerSecond = _mediaBitsPerSecond;
@@ -47,6 +48,7 @@
     [self.locale release];
     [self.filePath release];
     [self.storageLocation release];
+    [self.headers release];
     [self.creationUtc release];
     [self.lastWriteUtc release];
     [self.message release];
@@ -62,7 +64,8 @@
         self.name = [aDecoder decodeObjectForKey:@"name"];   
         self.locale = [aDecoder decodeObjectForKey:@"locale"];   
         self.filePath = [aDecoder decodeObjectForKey:@"filePath"];   
-        self.storageLocation = [aDecoder decodeObjectForKey:@"storageLocation"];   
+        self.storageLocation = [aDecoder decodeObjectForKey:@"storageLocation"];
+        self.headers = [aDecoder decodeObjectForKey:@"headers"];
         self.permittedNetworkTypes = [aDecoder decodeIntegerForKey:@"permittedNetworkTypes"];   
         self.length = [aDecoder decodeIntegerForKey:@"length"];   
         self.mediaBitsPerSecond = [aDecoder decodeIntegerForKey:@"mediaBitsPerSeconds"];   
@@ -85,7 +88,8 @@
     [aCoder encodeObject: self.name forKey:@"name"];   
     [aCoder encodeObject: self.locale forKey:@"locale"];   
     [aCoder encodeObject: self.filePath forKey:@"filePath"];   
-    [aCoder encodeObject: self.storageLocation forKey:@"storageLocation"];   
+    [aCoder encodeObject: self.storageLocation forKey:@"storageLocation"];
+    [aCoder encodeObject: self.headers forKey:@"headers"];
     [aCoder encodeInt: self.permittedNetworkTypes forKey:@"permittedNetworkTypes"];   
     [aCoder encodeInt: self.length forKey:@"length"];   
     [aCoder encodeInt: self.mediaBitsPerSecond forKey:@"mediaBitsPerSeconds"];   

@@ -139,6 +139,14 @@
     NSMutableURLRequest* request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:[self.downloadRequest url]]];
     [request setHTTPMethod:@"GET"];
     
+    NSDictionary* headers = self.downloadRequest.headers;
+    if(headers !=  nil && !headers.count == 0 ) {
+        for (NSString* key in headers) {
+            [request setValue:headers[key] forHTTPHeaderField:key];
+        }
+    }
+    
+    
     if ([self.downloadRequest availableLength] > 0)
     {
         NSString* range = @"bytes=";
