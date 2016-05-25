@@ -2,6 +2,7 @@ package dk.napp.downloadmanager;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Map;
 import java.util.UUID;
 
 public class DownloadRequest extends BaseDownloadRequest implements Serializable {
@@ -20,6 +21,7 @@ public class DownloadRequest extends BaseDownloadRequest implements Serializable
 	private Date lastWriteUtc;
 	private int lastDownloadBitsPerSecond;
 	private boolean isReadyForPlayback;
+	private Map<String, Object> headers;
 	
 	private UUID downloadBatchRequestId;
 	
@@ -100,5 +102,12 @@ public class DownloadRequest extends BaseDownloadRequest implements Serializable
 		}
 		
 		return this.filePath;
+	}
+	
+	public Map<String, Object> getHeaders() {
+		return headers;
+	}
+	public void setHeaders(Map<String, Object> headers) {
+		this.headers = headers;
 	}
 }
