@@ -91,6 +91,7 @@
     [downloadInformation setIsReadyForPlayback:[self.downloadRequest isReadyForPlayback]];
     [downloadInformation setPermittedNetworkTypes:[self.downloadRequest finalPermittedNetworkTypes]];
     [downloadInformation setStorageLocation:[self.downloadRequest finalStorageLocation]];
+    [downloadInformation setHeaders:[self.downloadRequest headers]];
     
     
     downloadInformation.message = @"resume";
@@ -145,7 +146,6 @@
             [request setValue:headers[key] forHTTPHeaderField:key];
         }
     }
-    
     
     if ([self.downloadRequest availableLength] > 0)
     {
