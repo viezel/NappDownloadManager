@@ -14,5 +14,5 @@ name: downloadmanager
 moduleid: dk.napp.downloadmanager
 guid: df317329-bceb-4caf-a059-74095ec13289
 platform: android
-minsdk: 3.4.0.GA
+minsdk: 3.5.1.GA
 architectures: armeabi;armeabi-v7a;x86
