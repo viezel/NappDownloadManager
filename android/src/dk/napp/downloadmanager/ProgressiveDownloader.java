@@ -627,6 +627,7 @@ public class ProgressiveDownloader {
 				downloadInformation.setIsReadyForPlayback(request.getIsReadyForPlayback());
 				downloadInformation.setPermittedNetworkTypes(request.getFinalPermittedNetworkTypes());
 				downloadInformation.setStorageLocation(request.getFinalStorageLocation());
+				downloadInformation.setHeaders(request.getHeaders());
 			}
 		}
 
@@ -762,6 +763,7 @@ public class ProgressiveDownloader {
 			downloadRequest.setOverrideStorageLocation(downloadInformation.getStorageLocation());
 			downloadRequest.setDownloadPriority(downloadInformation.getDownloadPriority());
 			downloadRequest.setOverridePermittedNetworkTypes(downloadInformation.getPermittedNetworkTypes());
+			downloadRequest.setHeaders(downloadInformation.getHeaders());
 
 			if (byteOffset == OFFSET_ZERO)
 			{
@@ -781,6 +783,7 @@ public class ProgressiveDownloader {
 			downloadRequest.setOverrideStorageLocation(downloadRequest.getOverrideStorageLocation());
 			downloadRequest.setDownloadPriority(downloadRequest.getDownloadPriority());
 			downloadRequest.setOverridePermittedNetworkTypes(downloadRequest.getOverridePermittedNetworkTypes());
+			downloadRequest.setHeaders(downloadRequest.getHeaders());
 		}
 
 		// Restart download information
@@ -1062,6 +1065,7 @@ public class ProgressiveDownloader {
 				downloadInformation.setIsReadyForPlayback(downloadRequest.getIsReadyForPlayback());
 				downloadInformation.setPermittedNetworkTypes(downloadRequest.getFinalPermittedNetworkTypes());
 				downloadInformation.setStorageLocation(downloadRequest.getFinalStorageLocation());
+				downloadInformation.setHeaders(downloadRequest.getHeaders());
 
 				if (downloadBatchRequest != null)
 				{
