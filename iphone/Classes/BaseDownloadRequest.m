@@ -15,6 +15,7 @@
 @synthesize locale = _locale;
 @synthesize creationUtc = _creationUtc;
 @synthesize overrideStorageLocation = _overrideStorageLocation;
+@synthesize headers;
 @synthesize priority = _priority;
 @synthesize overridePermittedNetworkTypes = _overridePermittedNetworkTypes;
 @synthesize length = _length;
@@ -43,6 +44,7 @@
     [self.creationUtc release];
     [self.overrideStorageLocation release];
     [self.finalStorageLocation release];
+    [self.headers release];
     
     [super dealloc];
 }

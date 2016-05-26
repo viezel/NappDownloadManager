@@ -18,6 +18,7 @@
 @property (retain) NSString* locale;
 @property (retain) NSDate* creationUtc;
 @property (retain) NSString* overrideStorageLocation;
+@property (retain) NSDictionary* headers;
 @property double priority;
 @property NetworkTypes overridePermittedNetworkTypes;
 @property NSUInteger length;

@@ -91,6 +91,7 @@
     [downloadInformation setIsReadyForPlayback:[self.downloadRequest isReadyForPlayback]];
     [downloadInformation setPermittedNetworkTypes:[self.downloadRequest finalPermittedNetworkTypes]];
     [downloadInformation setStorageLocation:[self.downloadRequest finalStorageLocation]];
+    [downloadInformation setHeaders:[self.downloadRequest headers]];
     
     
     downloadInformation.message = @"resume";
@@ -138,6 +139,13 @@
 {
     NSMutableURLRequest* request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:[self.downloadRequest url]]];
     [request setHTTPMethod:@"GET"];
+    
+    NSDictionary* headers = self.downloadRequest.headers;
+    if(headers !=  nil && !headers.count == 0 ) {
+        for (NSString* key in headers) {
+            [request setValue:headers[key] forHTTPHeaderField:key];
+        }
+    }
     
     if ([self.downloadRequest availableLength] > 0)
     {

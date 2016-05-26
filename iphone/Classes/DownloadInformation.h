@@ -20,6 +20,7 @@
 @property (retain) NSString* locale;
 @property (retain) NSString* filePath;
 @property (retain) NSString* storageLocation;
+@property (retain) NSDictionary* headers;
 @property NetworkTypes permittedNetworkTypes;
 @property NSUInteger length;
 @property NSInteger mediaBitsPerSecond;
