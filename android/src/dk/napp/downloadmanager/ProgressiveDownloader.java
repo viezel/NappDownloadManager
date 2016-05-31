@@ -1142,10 +1142,13 @@ public class ProgressiveDownloader {
 					webRequest1 = new DefaultHttpClient();
 					HttpGet request = new HttpGet();
 					request.setURI(new URI(downloadRequest.getUrl()));
+					
 					Map<String, Object> headers = downloadRequest.getHeaders();
 					if(headers != null && !headers.isEmpty()) {
 						for ( Entry<String, Object> entry : headers.entrySet()) {
-							request.setHeader(entry.getKey(), entry.getValue().toString());
+							if (entry.getValue() != null) {
+								request.setHeader(entry.getKey(), entry.getValue().toString());
+							}
 						}
 					}
 					
@@ -1188,8 +1191,7 @@ public class ProgressiveDownloader {
 						if (downloadRequest.getLength() == 0 ||
 							downloadRequest.getAvailableLength() == 0)
 						{
-							long contentLength = Long.parseLong(response.getFirstHeader("content-length").getValue());
-							Log.d(LCAT, "Setting length to " + contentLength);
+							long contentLength = response.getEntity().getContentLength();
 							downloadRequest.setLength(contentLength);
 							downloadInformation.setLength(contentLength);
 						}
