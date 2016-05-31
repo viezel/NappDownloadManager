@@ -204,9 +204,22 @@ NappDownloadManager.addDownload({
 	filePath: file.nativePath,
 	priority: NappDownloadManager.DOWNLOAD_PRIORITY_NORMAL
 });
+
+// Optionally add headers to download request
+NappDownloadManager.addDownload({
+	name: 'myfile ..',
+	url: "https://example.com/myfile.ext",
+	filePath: file.nativePath,
+	priority: NappDownloadManager.DOWNLOAD_PRIORITY_NORMAL,
+	headers: {"Authorization": "Bearer " + Ti.App.Properties.getString("authToken"), 
+        "CustomHeader": "CustomHeaderValue"}
+});
 ```
 
 ## Changelog
+* v1.1.7
+  * Contains fixes if server is using Transfer-Encoding: chunked or if server doesn't send content-length header with response.
+  * Added abiility pass headers to download request (for Authorization etc).
 
 * v1.1.5 (iOS only)  
   * Making sure we dont violate the Apple rule: 2.23 - Apps must follow the iOS Data Storage Guidelines or they will be rejected. We set the `NSURLIsExcludedFromBackupKey` flag. 
