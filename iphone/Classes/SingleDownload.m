@@ -235,7 +235,6 @@
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection{
-    
     if ([self.downloadRequest availableLength] == [self.downloadRequest length]) {
         // send an extra progress event to keep it at 100%
         [self.delegate downloadProgress:downloadInformation];
@@ -305,13 +304,14 @@
             TiLog(@"Server allows accept ranges so append to the file.");
         }
         
-        NSString *contentLength = [dictionary valueForKey:@"content-length"];        
-        TiLog(@"Content length %@", contentLength);
+        long contentLength = httpResponse.expectedContentLength;
+        TiLog(@"Content length %ld", contentLength);
         
         if ([self.downloadRequest length] == 0)
         {
-            [self.downloadRequest setLength:contentLength.integerValue];
-            [downloadInformation setLength:contentLength.integerValue];
+       
+            [self.downloadRequest setLength:contentLength];
+            [downloadInformation setLength:contentLength];
             [self.delegate downloadProgress:downloadInformation];
         }
     }
