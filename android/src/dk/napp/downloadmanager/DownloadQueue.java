@@ -18,7 +18,7 @@ import java.util.TimerTask;
 import java.util.UUID;
 
 import org.appcelerator.kroll.KrollDict;
-import org.appcelerator.titanium.util.Log;
+import org.appcelerator.kroll.common.Log;
 
 import android.content.ContextWrapper;
 
